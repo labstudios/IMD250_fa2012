@@ -14,7 +14,7 @@ package com
 		public function Master():void
 		{
 			stop();
-			
+			this.tabChildren = false;
 			this.frameListener = new FrameListener(this);
 			this.frameListener.addListener("landing", this.buildLanding);
 			this.frameListener.addListener("instructions", this.buildInstructions);
