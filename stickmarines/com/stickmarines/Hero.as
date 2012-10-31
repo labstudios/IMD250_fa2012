@@ -2,15 +2,21 @@ package com.stickmarines
 {
 	import flash.display.MovieClip;
 	import com.greensock.TweenLite;
+	import flash.geom.Point;
 	
 	public class Hero extends MovieClip
 	{
 		private static const HANG_TIME:Number = 36;
+		private static const LOW_ANGLE:Number = -50;
+		private static const HIGH_ANGLE:Number = 65;
+		private static const ARM_LENGTH:Number = 36;
+		
 		private static var _hero:Hero;
 		private var _up:Boolean = false;
 		private var _down:Boolean = false;
 		private var _left:Boolean = false;
 		private var _right:Boolean = false;
+		private var _shoot:Boolean = false;
 		private var speed:Number = 3;
 		private var fallSpeed:Number = 0;
 		private var gravity:Number = 0.75;
@@ -24,6 +30,9 @@ package com.stickmarines
 		
 		public function run():void
 		{
+			var shoulder:Point;
+			var vx:Number;
+			var vy:Number;
 			if (this.right)
 			{
 				this.x += this.speed;
@@ -60,6 +69,35 @@ package com.stickmarines
 			}
 			
 			this.y += this.fallSpeed;
+			
+			//point the arm at the mouse pointer
+			shoulder = new Point(this.x + this.arm.x, this.y + this.arm.y);
+			vx = -Math.abs( shoulder.x - Game.instance.mouseX);
+			vy = shoulder.y - Game.instance.mouseY;
+			this.arm.rotation = (Math.atan2(vy, vx) * 180 / Math.PI) + 180;
+			this.arm.rotation = this.arm.rotation < LOW_ANGLE  ? LOW_ANGLE:this.arm.rotation;
+			this.arm.rotation = this.arm.rotation > HIGH_ANGLE  ? HIGH_ANGLE:this.arm.rotation;
+			
+			this.shoot ? this.fire():null;
+		}
+		
+		public function fire():void
+		{
+			var shoulder:Point;
+			var vx:Number;
+			var vy:Number;
+			var rot:Number = this.arm.rotation;
+			shoulder = new Point(this.x + this.arm.x, this.y + this.arm.y);
+			if (this.scaleX < 0)
+			{
+				vx = Math.abs( shoulder.x - Game.instance.mouseX);
+				vy = shoulder.y - Game.instance.mouseY;
+				rot = (Math.atan2(vy, vx) * 180 / Math.PI) + 180;
+			}
+			
+			new Bullet(shoulder.x  +  Math.cos(rot * Math.PI / 180) * ARM_LENGTH, 
+								shoulder.y +  Math.sin(rot * Math.PI / 180) * ARM_LENGTH, 
+								rot);
 		}
 		
 		public static function get instance():Hero
@@ -127,6 +165,22 @@ package com.stickmarines
 		public function get down():Boolean
 		{
 			return this._down;
+		}
+		
+		public function set shoot(b:Boolean):void
+		{
+			this._shoot = b;
+		}
+		
+		public function get shoot():Boolean
+		{
+			return this._shoot;
+		}
+		
+		public function get arm():MovieClip
+		{
+			//return this.getChildByName("_arm") as MovieClip; //proper
+			return this["_arm"] as MovieClip; //might be faster
 		}
 	}
 }

@@ -4,6 +4,7 @@ package com.stickmarines
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
 	import flash.ui.Keyboard;
+	import flash.events.MouseEvent;
 	
 	public class Game extends Sprite
 	{
@@ -22,6 +23,8 @@ package com.stickmarines
 		{
 			this.stage.focus = this;
 			this.addEventListener(Event.ENTER_FRAME, this.run);
+			this.addEventListener(MouseEvent.MOUSE_DOWN, this.mouseDown);
+			this.addEventListener(MouseEvent.MOUSE_UP, this.mouseUp);
 		}
 		
 		private function keyPressed(e:KeyboardEvent):void
@@ -80,6 +83,20 @@ package com.stickmarines
 		{
 			this.stage.focus = this;
 			Hero.instance.run();
+			for (var i:int = 0; i < Bullet.bullets.length;++i)
+			{
+				Bullet.bullets[i].run();
+			}
+		}
+		
+		private function mouseDown(e:* = null):void
+		{
+			Hero.instance.shoot = true;
+		}
+		
+		private function mouseUp(e:* = null):void
+		{
+			Hero.instance.shoot = false;
 		}
 		
 		public static function get instance():Game
