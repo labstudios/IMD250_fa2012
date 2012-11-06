@@ -53,7 +53,10 @@ package com.stickmarines
 				}
 			}
 			
-			Game.instance.removeChild(this);
+			if (this.parent)
+			{
+				this.parent.removeChild(this);
+			}
 		}
 		
 		public static function get bullets():Vector.<Bullet>
