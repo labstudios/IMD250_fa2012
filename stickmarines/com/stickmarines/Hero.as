@@ -37,11 +37,17 @@ package com.stickmarines
 			{
 				this.x += this.speed;
 				this.myPlatform ? this.gotoAndStop("running"):null;
+				if (EndMarker.instance && this.x > EndMarker.instance.x)
+				{
+					this.x = EndMarker.instance.x;
+					this.gotoAndStop("standing");
+				}
+				
 				TweenLite.to(this, 0.5, {scaleX: 1 } );
 			}
 			if (this.left)
 			{
-				this.x -= this.speed;
+				this.x -=  this.globalX > Game.STAGE_LEFT ? this.speed:0;
 				this.myPlatform ? this.gotoAndStop("running"):null;
 				TweenLite.to(this, 0.5, {scaleX: -1 } );
 			}
@@ -50,7 +56,7 @@ package com.stickmarines
 				this.gotoAndStop("standing");
 			}
 			
-			if ((!this.left && !this.right) || (this.left && this.right))
+			if ((!this.left && !this.right) || (this.left && this.right) || this.globalX <= Game.STAGE_LEFT)
 			{
 				this.gotoAndStop("standing");
 			}
@@ -105,7 +111,7 @@ package com.stickmarines
 			}
 			for (var i:int = 0; i < Platform.platforms.length;++i)
 			{
-				if (Platform.platforms[i].hitTestPoint(this.x, this.y))
+				if (Platform.platforms[i].hitTestPoint(this.globalX, this.globalY))
 				{
 					ret = Platform.platforms[i];
 					break;
@@ -172,6 +178,18 @@ package com.stickmarines
 		{
 			//return this.getChildByName("_arm") as MovieClip; //proper
 			return this["_arm"] as MovieClip; //might be faster
+		}
+		
+		public function get globalX():Number
+		{
+			var globalPoint = this.localToGlobal(new Point());
+			return globalPoint.x;
+		}
+		
+		public function get globalY():Number
+		{
+			var globalPoint = this.localToGlobal(new Point());
+			return globalPoint.y;
 		}
 	}
 }

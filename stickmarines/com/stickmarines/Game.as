@@ -3,12 +3,16 @@ package com.stickmarines
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
+	import flash.geom.Point;
 	import flash.ui.Keyboard;
 	import flash.events.MouseEvent;
 	
 	public class Game extends Sprite
 	{
+		public static const STAGE_RIGHT:Number = 600;
+		public static const STAGE_LEFT:Number = 75;
 		private static var _game:Game;
+		
 		
 		public function Game():void
 		{
@@ -86,6 +90,16 @@ package com.stickmarines
 			for (var i:int = 0; i < Bullet.bullets.length;++i)
 			{
 				Bullet.bullets[i].run();
+			}
+			
+			if (Hero.instance.globalX > STAGE_RIGHT)
+			{
+				this.x -= (Hero.instance.globalX - STAGE_RIGHT);
+			}
+			
+			if (EndMarker.instance && EndMarker.instance.globalX < STAGE_RIGHT)
+			{
+				this.x += STAGE_RIGHT - EndMarker.instance.globalX;
 			}
 		}
 		
