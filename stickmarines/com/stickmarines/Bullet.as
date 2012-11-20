@@ -1,6 +1,7 @@
 package com.stickmarines
 {
 	import flash.display.Sprite;
+	import flash.geom.Point;
 	
 	public class Bullet extends Sprite
 	{
@@ -22,6 +23,11 @@ package com.stickmarines
 			this.ttl = this.stage.frameRate * 1.5;
 		}
 		
+		public static function clear():void
+		{
+			_bullets = new Vector.<Bullet>();
+		}
+		
 		public function run():void
 		{
 			this.x += this.vx;
@@ -36,6 +42,16 @@ package com.stickmarines
 			{
 				if (this.hitTestObject(Platform.platforms[i]))
 				{
+					this.killMe();
+					break;
+				}
+			}
+			
+			for (i = 0; i < Enemy.enemies.length;++i )
+			{
+				if (Enemy.enemies[i].hitTestPoint(this.globalX, this.globalY, true))
+				{
+					Enemy.enemies[i].hit();
 					this.killMe();
 					break;
 				}
@@ -62,6 +78,18 @@ package com.stickmarines
 		public static function get bullets():Vector.<Bullet>
 		{
 			return _bullets;
+		}
+		
+		public function get globalX():Number
+		{
+			var globalPoint = this.localToGlobal(new Point());
+			return globalPoint.x;
+		}
+		
+		public function get globalY():Number
+		{
+			var globalPoint = this.localToGlobal(new Point());
+			return globalPoint.y;
 		}
 	}
 	

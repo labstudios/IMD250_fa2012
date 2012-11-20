@@ -4,7 +4,7 @@ package com.stickmarines
 	import com.greensock.TweenLite;
 	import flash.geom.Point;
 	
-	public class Hero extends MovieClip
+	public class Hero extends Character
 	{
 		public static const HANG_TIME:Number = 36;
 		public static const LOW_ANGLE:Number = -50;
@@ -17,9 +17,6 @@ package com.stickmarines
 		private var _left:Boolean = false;
 		private var _right:Boolean = false;
 		private var _shoot:Boolean = false;
-		private var speed:Number = 3;
-		private var fallSpeed:Number = 0;
-		private var gravity:Number = 0.75;
 		private var jumpSpeed:Number = -15;
 		private var weapon:Weapon = new Weapon();
 		
@@ -28,7 +25,12 @@ package com.stickmarines
 			_hero = this;
 		}
 		
-		public function run():void
+		public static function clear():void
+		{
+			_hero = null;
+		}
+		
+		override public function run():void
 		{
 			var shoulder:Point;
 			var vx:Number;
@@ -102,24 +104,6 @@ package com.stickmarines
 			return _hero;
 		}
 		
-		public function get myPlatform():Platform
-		{
-			var ret:Platform = null;
-			if (this.fallSpeed < 0)
-			{
-				return null;
-			}
-			for (var i:int = 0; i < Platform.platforms.length;++i)
-			{
-				if (Platform.platforms[i].hitTestPoint(this.globalX, this.globalY))
-				{
-					ret = Platform.platforms[i];
-					break;
-				}
-			}
-			return ret;
-		}
-		
 		public function set up(b:Boolean):void
 		{
 			this._up = b;
@@ -178,18 +162,6 @@ package com.stickmarines
 		{
 			//return this.getChildByName("_arm") as MovieClip; //proper
 			return this["_arm"] as MovieClip; //might be faster
-		}
-		
-		public function get globalX():Number
-		{
-			var globalPoint = this.localToGlobal(new Point());
-			return globalPoint.x;
-		}
-		
-		public function get globalY():Number
-		{
-			var globalPoint = this.localToGlobal(new Point());
-			return globalPoint.y;
 		}
 	}
 }

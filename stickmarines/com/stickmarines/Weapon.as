@@ -16,6 +16,11 @@ package com.stickmarines
 			this.addEventListener(Event.REMOVED_FROM_STAGE, this.removed);
 		}
 		
+		public static function clear():void
+		{
+			_weapons = new Vector.<Weapon>();
+		}
+		
 		protected function added(e:* = null):void
 		{
 			weapons.push(this);

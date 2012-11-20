@@ -11,6 +11,11 @@ package com.stickmarines
 			_platforms.push(this);
 		}
 		
+		public static function clear():void
+		{
+			_platforms = new Vector.<Platform>();
+		}
+		
 		public static function get platforms():Vector.<Platform>
 		{
 			return _platforms;
