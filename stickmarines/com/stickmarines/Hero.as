@@ -70,10 +70,12 @@ package com.stickmarines
 				{
 					this.fallSpeed += this.gravity;
 				}
+				this.fallSpeed =  this.fallSpeed > this.terminalVelocity ? this.terminalVelocity:this.fallSpeed;
 			}
 			else if(this.myPlatform)
 			{
 				this.fallSpeed = 0;
+				this.y = this.myPlatform.top;
 			}
 			
 			this.y += this.fallSpeed;

@@ -25,5 +25,10 @@ package com.stickmarines
 		{
 			_platforms = v;
 		}
+		
+		public function get top():Number
+		{
+			return this.y - (this.height / 2) + 1;
+		}
 	}
 }

@@ -9,6 +9,7 @@ package com.stickmarines
 		protected var fallSpeed:Number = 0;
 		protected var gravity:Number = 0.75;
 		protected var dead:Boolean = false;
+		protected var terminalVelocity:Number = 15;
 		
 		public function Character():void
 		{
@@ -29,9 +30,10 @@ package com.stickmarines
 			}
 			for (var i:int = 0; i < Platform.platforms.length;++i)
 			{
-				if (Platform.platforms[i].hitTestPoint(this.globalX, this.globalY))
+				if (Platform.platforms[i].hitTestPoint(this.globalX, this.globalY + this.fallSpeed))
 				{
 					ret = Platform.platforms[i];
+					this.y = ret.top;
 					break;
 				}
 			}
