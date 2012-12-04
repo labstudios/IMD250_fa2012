@@ -44,5 +44,10 @@ package com.stickmarines.weapons
 								shoulder.y +  Math.sin(rot2 * Math.PI / 180) * Hero.ARM_LENGTH, 
 								rot2);
 		}
+		
+		override public function get type():String
+		{
+			return "Spread";
+		}
 	}
 }

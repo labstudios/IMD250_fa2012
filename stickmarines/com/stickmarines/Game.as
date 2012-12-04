@@ -6,12 +6,14 @@ package com.stickmarines
 	import flash.geom.Point;
 	import flash.ui.Keyboard;
 	import flash.events.MouseEvent;
+	import com.Master;
 	
 	public class Game extends Sprite
 	{
 		public static const STAGE_RIGHT:Number = 600;
 		public static const STAGE_LEFT:Number = 75;
 		public static const STAGE_WIDTH:Number  = 800;
+		public static const STAGE_HEIGHT:Number = 450;
 		private static var _game:Game;
 		
 		
@@ -107,6 +109,12 @@ package com.stickmarines
 			if (EndMarker.instance && EndMarker.instance.globalX < STAGE_RIGHT)
 			{
 				this.x += STAGE_RIGHT - EndMarker.instance.globalX;
+			}
+			
+			if (Hero.instance && EndMarker.instance && Hero.instance.x >= EndMarker.instance.x)
+			{
+				Master.instance.navToEnd();
+				return;
 			}
 		}
 		

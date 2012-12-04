@@ -46,6 +46,7 @@ package com.stickmarines
 			{
 				this.parent.removeChild(this);
 			}
+			Hud.instance.weapon = this.type;
 			return this; 
 		}
 		
@@ -92,6 +93,11 @@ package com.stickmarines
 		public static function get weapons():Vector.<Weapon>
 		{
 			return _weapons;
+		}
+		
+		public function get type():String
+		{
+			return "Semi-Automatic";
 		}
 	}
 }

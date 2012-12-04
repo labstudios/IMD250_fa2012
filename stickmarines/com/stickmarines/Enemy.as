@@ -1,17 +1,20 @@
 package com.stickmarines
 {
 	import com.greensock.TweenLite;
+	import flash.display.MovieClip;
 	
 	public class Enemy extends Character
 	{
 		private static var _enemies:Vector.<Enemy> = new Vector.<Enemy>();
 		private static const PLATFORM_PADDING:Number = 10;
+		private var worth:Number = 73;
 		
 		public function Enemy()
 		{
 			_enemies.push(this);
 			this.speed = -this.speed;
 			this.scaleX = -1;
+			this.hitSpot.visible = false;
 		}
 		
 		public static function clear():void
@@ -46,20 +49,20 @@ package com.stickmarines
 				}
 				this.fallSpeed = 0;
 			}
-		}
-		
-		public function hit():void
-		{
-			if (this.dead)
+			
+			if (this.hitSpot.hitTestObject(Hero.instance))
 			{
-				return;
+				Hero.instance.hit(this.damage);
 			}
-			this.dead = true;
-			TweenLite.to(this, 0.5, { alpha: 0, onComplete: this.destroy, delay:0.4 } );
-			this.gotoAndPlay("death");
 		}
 		
-		public function destroy():void
+		override public function hit(n:Number = 0):void
+		{
+			Hud.instance.score += this.worth;
+			super.hit(n);
+		}
+		
+		override public function destroy():void
 		{
 			this.stop();
 			this.parent.removeChild(this);
@@ -81,6 +84,11 @@ package com.stickmarines
 		public static function get enemies():Vector.<Enemy>
 		{
 			return _enemies;
+		}
+		
+		public function get hitSpot():MovieClip
+		{
+			return this.getChildByName("_hitSpot") as MovieClip;
 		}
 	}
 }

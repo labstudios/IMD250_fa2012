@@ -3,6 +3,7 @@ package com.stickmarines
 	import flash.display.MovieClip;
 	import com.greensock.TweenLite;
 	import flash.geom.Point;
+	import com.Master;
 	
 	public class Hero extends Character
 	{
@@ -10,6 +11,7 @@ package com.stickmarines
 		public static const LOW_ANGLE:Number = -50;
 		public static const HIGH_ANGLE:Number = 65;
 		public static const ARM_LENGTH:Number = 36;
+		private static const INVINCIBLE_TIME:Number = 24;
 		
 		private static var _hero:Hero;
 		private var _up:Boolean = false;
@@ -19,6 +21,7 @@ package com.stickmarines
 		private var _shoot:Boolean = false;
 		private var jumpSpeed:Number = -15;
 		private var weapon:Weapon = new Weapon();
+		private var invincibility:Number = 0;
 		
 		public function Hero():void
 		{
@@ -35,7 +38,11 @@ package com.stickmarines
 			var shoulder:Point;
 			var vx:Number;
 			var vy:Number;
-			if (this.right)
+			if (this.dead)
+			{
+				return;
+			}
+			if (this.right && !this.invincible)
 			{
 				this.x += this.speed;
 				this.myPlatform ? this.gotoAndStop("running"):null;
@@ -47,7 +54,7 @@ package com.stickmarines
 				
 				TweenLite.to(this, 0.5, {scaleX: 1 } );
 			}
-			if (this.left)
+			if (this.left && !this.invincible)
 			{
 				this.x -=  this.globalX > Game.STAGE_LEFT ? this.speed:0;
 				this.myPlatform ? this.gotoAndStop("running"):null;
@@ -89,6 +96,24 @@ package com.stickmarines
 			this.arm.rotation = this.arm.rotation > HIGH_ANGLE  ? HIGH_ANGLE:this.arm.rotation;
 			
 			this.weapon.shotSpace--;
+			this.invincibility--;
+			
+			if (this.invincible)
+			{
+				this.alpha = this.alpha < 0.5 ? 1:0.3;
+				if (this.scaleX  > 0)
+				{
+					this.x -= this.speed * 2;
+				}
+				else
+				{
+					this.x += this.speed * 2;
+				}
+			}
+			else
+			{
+				this.alpha = 1;
+			}
 			this.shoot ? this.weapon.fire(this):null;
 			
 			for (var i:int = 0; i < Weapon.weapons.length;++i)
@@ -99,6 +124,26 @@ package com.stickmarines
 					break;
 				}
 			}
+			
+			if (this.y > Game.STAGE_HEIGHT)
+			{
+				super.hit((this.y - Game.STAGE_HEIGHT) / this.height);
+			}
+		}
+		
+		override public function hit(n:Number = 0):void
+		{
+			if (!this.invincible)
+			{
+				super.hit(n);
+				this.fallSpeed = this.jumpSpeed /2;
+				this.invincibility = INVINCIBLE_TIME;
+			}
+		}
+		
+		override public function destroy():void
+		{
+			Master.instance.navToEnd();
 		}
 		
 		public static function get instance():Hero
@@ -164,6 +209,17 @@ package com.stickmarines
 		{
 			//return this.getChildByName("_arm") as MovieClip; //proper
 			return this["_arm"] as MovieClip; //might be faster
+		}
+		
+		public function get invincible():Boolean
+		{
+			return this.invincibility > 0;
+		}
+		
+		override public function set hitPoints(n:Number):void
+		{
+			Hud.instance.life = n;
+			this._hitPoints = n;
 		}
 	}
 }

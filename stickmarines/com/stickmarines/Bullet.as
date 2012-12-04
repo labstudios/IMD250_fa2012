@@ -10,6 +10,7 @@ package com.stickmarines
 		protected var vx:Number = 0;
 		protected var vy:Number = 0;
 		protected var ttl:Number = 36;
+		protected var damage:Number = 12;
 		
 		public function Bullet(x:Number = 0, y:Number = 0, rotation:Number = 0):void
 		{
@@ -51,7 +52,7 @@ package com.stickmarines
 			{
 				if (Enemy.enemies[i].hitTestPoint(this.globalX, this.globalY, true))
 				{
-					Enemy.enemies[i].hit();
+					Enemy.enemies[i].hit(this.damage);
 					this.killMe();
 					break;
 				}

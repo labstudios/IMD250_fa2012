@@ -5,11 +5,15 @@ package com
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import com.FrameListener;
+	import com.stickmarines.Hud;
 	
 	public class Master extends MovieClip
 	{
+		private static var master:Master;
 		protected var perc:Number = 0; //precent loaded
 		protected var frameListener:FrameListener;
+		private var finalScore:Number = 0;
+		
 		
 		public function Master():void
 		{
@@ -23,6 +27,7 @@ package com
 			
 			this.loaderInfo.addEventListener(ProgressEvent.PROGRESS, this.updatePerc);
 			this.loaderInfo.addEventListener(Event.COMPLETE, ready);
+			master = this;
 		}
 		
 		//Loading functions
@@ -55,6 +60,10 @@ package com
 
 		public function navToEnd(e:* = null):void
 		{
+			if (this.currentFrameLabel == "game")
+			{
+				this.finalScore = Hud.instance.score;
+			}
 			gotoAndStop("end");
 		}
 		
@@ -79,7 +88,13 @@ package com
 		
 		public function buildEnd():void
 		{
+			endScoreBox.text = this.finalScore.toString();
 			home_btn.addEventListener(MouseEvent.CLICK, navToLanding);
+		}
+		
+		public static function get instance():Master
+		{
+			return master;
 		}
 	}
 }

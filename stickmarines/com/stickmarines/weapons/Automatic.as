@@ -8,5 +8,10 @@ package com.stickmarines.weapons
 		{
 			this.weaponSpace = 2;
 		}
+		
+		override public function get type():String
+		{
+			return "Automatic";
+		}
 	}
 }
